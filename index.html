@@ -127,7 +127,7 @@
 
     .bouncing-heart-trigger {
       position: absolute;
-      bottom: 30px;
+      bottom: 12px; /* ปรับให้ขยับลงมาด้านล่างชิดขอบมากขึ้นจากเดิม */
       left: 50%;
       transform: translateX(-50%);
       font-size: 75px;
@@ -474,7 +474,6 @@
 
     let continuousHeartsInterval = null;
 
-    // ฟังก์ชันสั่งเล่นเพลงที่รองรับบราวเซอร์มือถือ (Android/iOS) โดยดึงจากการแตะสัมผัสหน้าจอ
     function tryPlayMusic() {
       if (bgMusic && bgMusic.paused) {
         bgMusic.play().then(() => {
@@ -582,7 +581,6 @@
       if (e.cancelable) e.preventDefault();
       isDraggingMatch = true;
       
-      // บังคับปลดล็อกเสียงเพลงทันทีที่เริ่มแตะลากไม้ขีดบนมือถือ
       tryPlayMusic();
 
       const clientX = e.clientX || (e.touches && e.touches[0].clientX);
