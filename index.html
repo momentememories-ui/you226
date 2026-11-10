@@ -474,22 +474,16 @@
 
     let continuousHeartsInterval = null;
 
-    function playAudioOnFirstInteraction() {
+    // ฟังก์ชันสั่งเล่นเพลงที่รองรับบราวเซอร์มือถือ (Android/iOS) โดยดึงจากการแตะสัมผัสหน้าจอ
+    function tryPlayMusic() {
       if (bgMusic && bgMusic.paused) {
         bgMusic.play().then(() => {
-          console.log("Music started playing automatically");
+          console.log("Music started playing successfully");
         }).catch((err) => {
-          console.log("Autoplay waiting for interaction:", err);
+          console.log("Autoplay blocked:", err);
         });
       }
-      window.removeEventListener('touchstart', playAudioOnFirstInteraction);
-      window.removeEventListener('click', playAudioOnFirstInteraction);
-      window.removeEventListener('mousedown', playAudioOnFirstInteraction);
     }
-
-    window.addEventListener('touchstart', playAudioOnFirstInteraction, { passive: true });
-    window.addEventListener('click', playAudioOnFirstInteraction);
-    window.addEventListener('mousedown', playAudioOnFirstInteraction);
 
     let isLit = false;
     let frictionScore = 0;
@@ -587,6 +581,10 @@
     function onStart(e) {
       if (e.cancelable) e.preventDefault();
       isDraggingMatch = true;
+      
+      // บังคับปลดล็อกเสียงเพลงทันทีที่เริ่มแตะลากไม้ขีดบนมือถือ
+      tryPlayMusic();
+
       const clientX = e.clientX || (e.touches && e.touches[0].clientX);
       const clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
@@ -750,6 +748,7 @@
     const bigHeartContainer = document.getElementById('bigHeartContainer');
 
     heartTrigger.addEventListener('click', () => {
+      tryPlayMusic();
       waterLevel = 0;
       waterFill.style.height = '0%';
       heartTrigger.style.display = 'none';
@@ -778,6 +777,7 @@
     }
 
     function startWatering() {
+      tryPlayMusic();
       addWater();
       fillInterval = setInterval(addWater, 60);
     }
@@ -825,7 +825,6 @@
       }, 120);
     }
 
-    // ปรับลดเหลือ 3 รูป (photo1 ถึง photo3) และจัดตำแหน่งใหม่ให้สมดุลสวยงาม
     const polaroidData = [
       { img: 'photo1.jpg', text: 'วันที่ที่รักขอเป็นแฟน♡<br>10/10/69', top: '15%', left: '15%', rotate: '-6deg', duration: '1.8s', delay: '0s' },
       { img: 'photo2.jpg', text: 'ชอบเวลาที่ที่รัก<br>เล่นกีตาร์ให้ฟังง❤️', top: '15%', left: '55%', rotate: '5deg', duration: '2.4s', delay: '0.3s' },
@@ -864,6 +863,7 @@
 
         card.addEventListener('click', (e) => {
           e.stopPropagation();
+          tryPlayMusic();
           const isActive = card.classList.contains('active');
           document.querySelectorAll('.polaroid').forEach(p => p.classList.remove('active'));
           
